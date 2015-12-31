@@ -15,6 +15,7 @@
  *	v 0.2 - added separate preference for alarm triggering so a different ringtone can be used for alarm VS doorbell. created
  *	separate test buttons for doorbell and alarm
  *	v 0.3 - added firmware version and checksum reporting as part of the config command, modifed the way the battery check works, may need to redress it later
+ *	v 0.4 - added Music Capability functionality (playTrack).  added setRingtone command to change default ringtone.
  */
 
  metadata {
@@ -25,10 +26,12 @@
 		capability "Switch"
  		capability "Configuration"
 		capability "Refresh"
-
+		capability "Music Player"
+		
 		command "atest"
         command "btest"
         command "getbatt"
+        command "setRingtone"
 
 		fingerprint deviceId: "0x1005", inClusters: "0x5E,0x98"
 	}
@@ -264,7 +267,21 @@ def atest() {
 	if (state.debug) log.debug "Testing alarm sound ${prefAlarmtone} on ${device.displayName}"
 	both()
 }
-
+def playTrack(track) {
+	def request = [
+		zwave.configurationV1.configurationSet(parameterNumber: 80, size: 1, scaledConfigurationValue: 0), // disable notifications
+		zwave.configurationV1.configurationSet(parameterNumber: 6, size: 1, scaledConfigurationValue: track.toInteger()), // play track
+		zwave.configurationV1.configurationSet(parameterNumber: 80, size: 1, scaledConfigurationValue: 2) // enable
+	]
+	commands(request, 50) // send commands, 50ms apart
+}
+def setRingtone(track) {
+	def request = [
+		zwave.configurationV1.configurationSet(parameterNumber: 5, size: 1, scaledConfigurationValue: track),
+		zwave.configurationV1.configurationSet(parameterNumber: 80, size: 1, scaledConfigurationValue: 2)
+	]
+	commands(request)  
+}
 def strobe() {
 	if (state.debug) log.debug "Strobe command received"
 	on()
