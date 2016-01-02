@@ -1,5 +1,5 @@
 /*
- * V 0.4 of Aeon Doorbell code 12/31/2015
+ * V 0.5 of Aeon Doorbell code 01/02/2016
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
  *
@@ -16,6 +16,7 @@
  *	separate test buttons for doorbell and alarm
  *	v 0.3 - added firmware version and checksum reporting as part of the config command, modifed the way the battery check works, may need to redress it later
  *	v 0.4 - added Music Capability functionality (playTrack).  added setRingtone command to change default ringtone.
+  *	v 0.5 - added ability to test sounds on demand using a slider on the device page
  */
 
  metadata {
@@ -82,8 +83,14 @@
 		standardTile("refresh", "device.power", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
 			state "default", label:'', action:"refresh.refresh", icon:"st.secondary.refresh"
 		}
+		valueTile("testSoundLabel", "device.battery", width: 2, height: 2, inactiveLabel: false, decoration: "flat") {
+			state "battery", label:'Test Sound:', unit:""
+		}
+        	controlTile("testSoundSlider", "device.playTrack", "slider", width: 4, height: 2, inactiveLabel: false, range:"(1..99)") {
+			state "testSound", action:"playTrack", backgroundColor: "#1e9cbb"
+		}
 		main "alarm"
-		details(["alarm","btest","atest","off","battery","setRingtone","setVolume","refresh","configure"])
+		details(["alarm","btest","atest","off","testSoundLabel","testSoundSlider","battery","setRingtone","setVolume","refresh","configure"])
 	}
 	
     preferences { 
