@@ -319,8 +319,8 @@ def on() {
 	]
     commands(request)
     if (state.notification) {
-    	sendEvent(name: "alarm", value: "on", type: "physical", displayed: true, isStateChange: true)
-		if (state.debug) log.debug "${device.displayName} has been rung from button."
+    	sendEvent(name: "switch", value: "on", type: "physical", displayed: true, isStateChange: true)
+	if (state.debug) log.debug "${device.displayName} has been rung from button."
     } else {
     	if (state.debug) log.debug "${device.displayName} has been rung from playTrack."
     }
@@ -333,7 +333,7 @@ def off() {
         zwave.basicV1.basicGet()
 	]
     commands(request)
-    if (state.notification) sendEvent(name: "alarm", value: "off", type: "physical", displayed: true, isStateChange: true)
+    if (state.notification) sendEvent(name: "switch", value: "off", type: "physical", displayed: true, isStateChange: true)
 	state.notification = true
 }
 
