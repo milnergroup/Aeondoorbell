@@ -200,7 +200,7 @@ def zwaveEvent(physicalgraph.zwave.commands.configurationv2.ConfigurationReport 
 
 def zwaveEvent(physicalgraph.zwave.commands.configurationv1.ConfigurationReport cmd) {
     if (state.debug) log.debug "---CONFIGURATION REPORT V1--- ${device.displayName} parameter ${cmd.parameterNumber} with a byte size of ${cmd.size} is set to ${cmd.configurationValue}"
-    def map = [ name: "battery"]
+    def map = [ name: "battery", value: 100]
 	if (cmd.parameterNumber == 42) {
     	if (cmd.configurationValue == [255]) {
 			map.value = 0
