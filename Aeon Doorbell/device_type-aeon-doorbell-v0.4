@@ -356,7 +356,7 @@ def configure() {
         	if (state.debug) log.debug "configuration being sent to ${device.displayName}"
 		}
 	if (!state.prefRingtone) state.prefRingtone = 1
-    if (!state.prefRingtone) state.prefAlarmtone = 1
+    if (!state.prefAlarmtone) state.prefAlarmtone = 1
 	if (!state.prefVolume) state.prefVolume = 10
 	if (!state.prefNumrings) state.prefNumrings = 1
 	log.debug "settings: ${settings.inspect()}, state: ${state.inspect()}"
