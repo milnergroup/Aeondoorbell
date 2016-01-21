@@ -338,9 +338,9 @@ def off() {
     commands(request)
     if (state.notification) {
         sendEvent(name: "switch", value: "off", type: "physical", displayed: true, isStateChange: true)
-        sendEvent(name: "alarm", value: "off", type: "physical", displayed: true, isStateChange: true)
     }
-	state.notification = true
+    sendEvent(name: "alarm", value: "off", type: "physical", displayed: true, isStateChange: true)
+    state.notification = true
 }
 
 def refresh() {
