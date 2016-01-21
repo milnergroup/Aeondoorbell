@@ -266,13 +266,19 @@ def getbatt() {
 }
 
 def btest() {
-	if (state.debug) log.debug "Testing doorbell ring ${prefRingtone} on ${device.displayName}"
-	on()
+	if (state.debug) log.debug "Bell test command received"
+	def request = [
+        zwave.basicV1.basicSet(value: 0xFF)
+    ]
+    commands(request)
 }
 
 def atest() {
-	if (state.debug) log.debug "Testing alarm sound ${prefAlarmtone} on ${device.displayName}"
-	both()
+	if (state.debug) log.debug "Alarm test command received"
+	def request = [
+        zwave.configurationV1.configurationSet(parameterNumber: 6, size: 1, scaledConfigurationValue: prefAlarmtone.toInteger())
+    ]
+    commands(request)
 }
 
 def playTrack(track) {
@@ -305,11 +311,7 @@ def siren() {
 }
 
 def both() {
-	if (state.debug) log.debug "Alarm test command received"
-	def request = [
-        zwave.configurationV1.configurationSet(parameterNumber: 6, size: 1, scaledConfigurationValue: prefAlarmtone.toInteger())
-    ]
-    commands(request)
+
 }
 
 def on() {
@@ -320,6 +322,7 @@ def on() {
     commands(request)
     if (state.notification) {
     	sendEvent(name: "switch", value: "on", type: "physical", displayed: true, isStateChange: true)
+        sendEvent(name: "alarm", value: "on", type: "physical", displayed: true, isStateChange: true)
 	if (state.debug) log.debug "${device.displayName} has been rung from button."
     } else {
     	if (state.debug) log.debug "${device.displayName} has been rung from playTrack."
@@ -333,7 +336,10 @@ def off() {
         zwave.basicV1.basicGet()
 	]
     commands(request)
-    if (state.notification) sendEvent(name: "switch", value: "off", type: "physical", displayed: true, isStateChange: true)
+    if (state.notification) {
+        sendEvent(name: "switch", value: "off", type: "physical", displayed: true, isStateChange: true)
+        sendEvent(name: "alarm", value: "off", type: "physical", displayed: true, isStateChange: true)
+    }
 	state.notification = true
 }
 
